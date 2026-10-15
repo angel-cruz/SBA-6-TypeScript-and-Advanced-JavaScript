@@ -14,3 +14,11 @@ dist/
 *.log
 npm-debug.log*
 
+# macOS
+.DS_Store
+
+# Testing
+coverage/
+
+# Editor settings
+.vscode/
