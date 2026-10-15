@@ -1,3 +1,11 @@
+import { createInterface } from "node:readline/promises";
+import { stdin as input, stdout as output } from "node:process";
+import { Product } from "./models/Product";
+import { ApiService } from "./services/apiService";
+import { calculateDiscount } from "./utils/discountCalculator";
+import { calculateTax } from "./utils/taxCalculator";
+import { getErrorMessage } from "./utils/errorHandler";
+
 type CartItem = { product: Product; quantity: number };
 
 class Store {
