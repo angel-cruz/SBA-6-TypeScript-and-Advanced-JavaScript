@@ -1,3 +1,6 @@
+import { Product, ProductData } from "../models/Product";
+import { ApiError } from "../utils/errorHandler";
+
 const API_URL = "https://dummyjson.com/products";
 
 interface ProductResponse {
