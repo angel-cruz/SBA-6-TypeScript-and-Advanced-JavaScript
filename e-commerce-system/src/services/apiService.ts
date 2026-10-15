@@ -9,6 +9,7 @@ interface ProductResponse {
   skip: number;
   limit: number;
 }
+
 export class ApiService {
   private async request<T>(url: string): Promise<T> {
     const controller = new AbortController();
@@ -23,5 +24,17 @@ export class ApiService {
     } finally {
       clearTimeout(timeout);
     }
+  }
+
+  async getProducts(): Promise<Product[]> {
+    const data = await this.request<ProductResponse>(`${API_URL}?limit=0`);
+    if (!Array.isArray(data.products)) throw new ApiError("Invalid products response");
+    return data.products.map(item => Product.fromApi(item));
+  }
+
+  async searchProducts(query: string): Promise<Product[]> {
+    const data = await this.request<ProductResponse>(`${API_URL}/search?q=${encodeURIComponent(query)}`);
+    if (!Array.isArray(data.products)) throw new ApiError("Invalid search response");
+    return data.products.map(item => Product.fromApi(item));
   }
 }
