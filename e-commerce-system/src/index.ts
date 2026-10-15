@@ -100,3 +100,49 @@ Loaded ${this.products.length} products from DummyJSON API.`);
   }
 
 }
+
+async function main(): Promise<void> {
+  const store = new Store();
+  const rl = createInterface({ input, output });
+  try {
+    await store.initialize();
+    while (true) {
+      console.log("\n===== E-Commerce Product Management =====");
+      console.log("1. View All Products");
+      console.log("2. Search Products");
+      console.log("3. Add Product to Cart");
+      console.log("4. Update or Remove Cart Item");
+      console.log("5. View Shopping Cart");
+      console.log("6. Apply Extra Discount");
+      console.log("7. View Product Details");
+      console.log("0. Exit\n");
+      const choice = (await rl.question("Select an option: ")).trim();
+      try {
+        switch (choice) {
+          case "1": store.listProducts(); break;
+          case "2": await store.search(await rl.question("Search term: ")); break;
+          case "3": {
+            const id = Number(await rl.question("Product ID: "));
+            const quantity = Number(await rl.question("Quantity: "));
+            store.addToCart(id, quantity); break;
+          }
+          case "4": {
+            const id = Number(await rl.question("Product ID: "));
+            const quantity = Number(await rl.question("New quantity (0 to remove): "));
+            store.updateQuantity(id, quantity); break;
+          }
+          case "5": store.showCart(); break;
+          case "6": {
+            const discount = Number(await rl.question("Discount percentage (0-100): "));
+            store.showCart(discount); break;
+          }
+          case "7": store.showProductDetails(Number(await rl.question("Product ID: "))); break;
+          case "0": console.log("Goodbye!"); return;
+          default: console.log("Please choose a valid menu option.");
+        }
+      } catch (error) { console.log(`Error: ${getErrorMessage(error)}`); }
+    }
+  } finally { rl.close(); }
+}
+
+main().catch(error => { console.error(getErrorMessage(error)); process.exitCode = 1; });
